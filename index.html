@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Text Checker</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, #0f172a, #334155);
+        color: #f8fafc;
+        padding: 24px;
+      }
+
+      .card {
+        width: min(700px, 100%);
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 16px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+        padding: 24px;
+        backdrop-filter: blur(10px);
+      }
+
+      h1 {
+        margin-top: 0;
+        font-size: 1.8rem;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 180px;
+        resize: vertical;
+        border-radius: 12px;
+        border: 1px solid #64748b;
+        padding: 12px;
+        font-size: 1rem;
+        background: #e2e8f0;
+        color: #0f172a;
+        box-sizing: border-box;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .stat {
+        background: rgba(248, 250, 252, 0.1);
+        border-radius: 10px;
+        padding: 12px;
+      }
+
+      .stat strong {
+        display: block;
+        font-size: 1.2rem;
+        margin-top: 4px;
+      }
+
+      .status {
+        margin-top: 16px;
+        font-weight: bold;
+        color: #fde68a;
+      }
+
+      @media (max-width: 600px) {
+        .stats {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>Simple Text Checker</h1>
+      <p>Type or paste text below to see quick details.</p>
+      <textarea id="textInput" placeholder="Start typing here..."></textarea>
+
+      <div class="stats">
+        <div class="stat">Characters <strong id="charCount">0</strong></div>
+        <div class="stat">Characters (no spaces) <strong id="charNoSpaceCount">0</strong></div>
+        <div class="stat">Words <strong id="wordCount">0</strong></div>
+        <div class="stat">Sentences <strong id="sentenceCount">0</strong></div>
+      </div>
+
+      <div class="status" id="statusText">Waiting for input...</div>
+    </main>
+
+    <script>
+      const input = document.getElementById('textInput');
+      const charCount = document.getElementById('charCount');
+      const charNoSpaceCount = document.getElementById('charNoSpaceCount');
+      const wordCount = document.getElementById('wordCount');
+      const sentenceCount = document.getElementById('sentenceCount');
+      const statusText = document.getElementById('statusText');
+
+      function updateStats() {
+        const text = input.value;
+        const trimmed = text.trim();
+        const words = trimmed ? trimmed.split(/\s+/).length : 0;
+        const sentences = trimmed ? (trimmed.match(/[.!?]+(?=\s|$)/g) || []).length : 0;
+        const withoutSpaces = text.replace(/\s/g, '').length;
+
+        charCount.textContent = text.length;
+        charNoSpaceCount.textContent = withoutSpaces;
+        wordCount.textContent = words;
+        sentenceCount.textContent = sentences;
+
+        if (!trimmed) {
+          statusText.textContent = 'Waiting for input...';
+        } else if (words < 10) {
+          statusText.textContent = 'Short text';
+        } else {
+          statusText.textContent = 'Good length';
+        }
+      }
+
+      input.addEventListener('input', updateStats);
+      updateStats();
+    </script>
+  </body>
+</html>
